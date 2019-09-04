@@ -11,6 +11,8 @@
     gtag('js', new Date());
     gtag('config', 'UA-126651542-3');
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/typeit@6.0.3/dist/typeit.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +21,173 @@
 </head>
 
 <body>
-  <h1>yoyo </h1>
+    <div id="app">
+        <div class="card">
+          <input type="text" placeholder="請填你的名字" v-if="!start_animation" v-model="name"/><span class="type-effect" v-show="start_animation"></span>
+        </div>
+        <div class="play" @click="play">{{startbutton}}</div>
+        <div class="poppy"></div>
+    </div>
 </body>
 
+
+<style>
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background-color: #FFD57B;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#app .card {
+  padding: 15px;
+  background-color: white;
+  width: 70%;
+  border-radius: 5px;
+  transition: 0.5s;
+}
+#app .card:focus-within {
+  transform: translateY(-25px);
+  border: 8px solid orange;
+}
+#app .play {
+  margin: 25px;
+  background-color: #87469D;
+  cursor: pointer;
+  padding: 8px 18px;
+  border-radius: 5px;
+}
+#app input {
+  width: 100%;
+  outline: none;
+  border: none;
+  font-size: 1rem;
+}
+#app h1 {
+  cursor: pointer;
+  margin: 0;
+}
+
+.poppy {
+  position: absolute;
+  right: -30px;
+  bottom: -35px;
+  height: 300px;
+  width: 300px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("assets/02.png");
+}
+
+canvas {
+  height: 180px;
+  height: 180px;
+}
+
+.play {
+  color: white;
+}
+
+</style>
+
+<script>
+
+var vue = new Vue({
+  el: '#app',
+  data () {
+    return {
+      title: "請填入你的名字",
+      name: "",
+      zdog: null,
+      instance: null,
+      start_animation: false,
+      color: {
+        purple: "#87469D",
+        orange: ""
+      }
+    }
+  },
+  mounted (){
+    // this.initZdog();
+  },
+  computed: {
+    startbutton: function() {
+      return "Hi, " + this.name + " 請按這裡開始";
+    }
+  },
+  methods : {
+    initType: function() {
+      this.instance = new TypeIt('.type-effect', {
+        deleteSpeed: 100
+      })
+        .type("哈摟 ")
+        .type(this.name)
+        .pause(700)
+        .delete()	
+        .type("終於知道你的名字")
+    },
+    play: function() {
+      if(this.name == "") {
+        this.name = "請先輸入名稱再開始"
+        return 
+      }
+      this.start_animation = !this.start_animation
+      this.initType();
+      this.instance.go();
+    },
+    touchAll: function() {
+      console.log("touch")
+      this.instance.type('number2').go()
+    },
+    // initZdog: function(){
+    //   this.zdog = new Zdog.Illustration({
+    //     // set canvas with selector
+    //     element: '.zdog-canvas',
+    //     zoom: 1
+    //   });
+    // // add circle
+    // new Zdog.Ellipse({
+    //   addTo: this.zdog,
+    //   diameter: 80,
+    //   stroke: 20,
+    //   color: '#636',
+    // });
+    // // square
+    // new Zdog.Rect({
+    //   addTo: this.zdog,
+    //   width: 80,
+    //   height: 80,
+    //   // position further back
+    //   translate: { z: -40 },
+    //   stroke: 12,
+    //   color: '#E62',
+    //   fill: true,
+    // });
+    // // update & render
+    // this.zdog.updateRenderGraph();
+    // }
+  }
+});
+
+
+
+function animate() {
+  // rotate illo each frame
+  illo.rotate.y += 0.03;
+  illo.updateRenderGraph();
+  // animate next frame
+  requestAnimationFrame( animate );
+}
+// start animation
+
+</script>
 </html>
