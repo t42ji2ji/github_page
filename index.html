@@ -13,6 +13,7 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/typeit@6.0.3/dist/typeit.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,19 +129,31 @@ var vue = new Vue({
   methods : {
     initType: function() {
       this.instance = new TypeIt('.type-effect', {
-        deleteSpeed: 100
+        deleteSpeed: 150
       })
-        .type("哈摟 ")
+      .type("哈摟 ")
         .type(this.name)
         .pause(700)
+        .delete()
+      var texts = ["終於偷到你的名字了！", "在今天這個特別的日子", "不知道該送些什麼給你","只好寫寫程式表達我的祝福之意","希望你今年的生日", "可以比去年更開心哦～"]
+      var vm = this
+      texts.forEach(function(item, index, array){
+        console.log(item, index, array);
+        vm.quick_type(item) // 物件, 索引, 全部陣列
+      });
+      this.instance.type("當當～")
+    },
+    quick_type: function(text) {
+      this.instance.type(text)
+        .pause(700)
         .delete()	
-        .type("終於知道你的名字")
     },
     play: function() {
       if(this.name == "") {
         this.name = "請先輸入名稱再開始"
         return 
       }
+      this.name = ""
       this.start_animation = !this.start_animation
       this.initType();
       this.instance.go();
