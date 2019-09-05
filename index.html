@@ -24,14 +24,18 @@
 
 <body>
     <div id="app">
-        <div class="postcard" v-if="happy">
-            <img src="assets/123.png" alt="">
-          </div>
+      <transition name="fade" mode="">
+          <div class="postcard" v-if="happy">
+              <img src="assets/123.png" alt="">
+            </div>
+      </transition>  
         <div class="card" v-if="!happy">
-          <input type="text" placeholder="請填你的名字" v-if="!start_animation" v-model="name"/><span class="type-effect" v-show="start_animation"></span>
+          <input type="text" :placeholder="placeholder" v-if="!start_animation" v-model="name"/><span class="type-effect" v-show="start_animation"></span>
         </div>
-        <div class="play" @click="play">{{startbutton}}</div>
+        <div class="play" @click="play" v-if="!happy">{{startbutton}}</div>
+        <div class="play" @click="wow" v-if="happy">開心開心</div>
         <canvas id="world" v-show="happy"></canvas>
+
 
         <div class="poppy" v-if="!happy"></div>
     </div>
@@ -64,6 +68,9 @@ html, body {
   margin-left: 5%;
 }
 
+.play {
+  z-index: 9999;
+}
 
 #app {
   height: 100%;
@@ -125,6 +132,13 @@ canvas {
   color: white;
 }
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 </style>
 
 <script>
@@ -134,6 +148,7 @@ var vue = new Vue({
   data () {
     return {
       title: "請填入你的名字",
+      placeholder: "請填入你的名字",
       name: "",
       zdog: null,
       instance: null,
@@ -154,6 +169,10 @@ var vue = new Vue({
     }
   },
   methods : {
+    wow: function() {
+      console.log("asd");
+      this.happy = false;
+    },
     initType: function() {
       this.instance = new TypeIt('.type-effect', {
         deleteSpeed: 150,
@@ -171,17 +190,17 @@ var vue = new Vue({
       texts.forEach(function(item, index, array){
         vm.quick_type(item) // 物件, 索引, 全部陣列
       });
-      this.instance.type("送上祝賀的卡片")
+      this.instance.type("送上祝賀的卡片", 900)
       this.instance.pause(900)
     },
-    quick_type: function(text) {
+    quick_type: function(text, pausetime) {
       this.instance.type(text)
-        .pause(900)
+        .pause(pausetime)
         .delete()	
     },
     play: function() {
       if(this.name == "") {
-        this.name = "請先輸入名稱再開始"
+        this.placeholder = "請輸入名稱再開始"
         return 
       }
       this.happy = false
@@ -237,7 +256,7 @@ function animate() {
 (function () {
   var COLORS, Confetti, NUM_CONFETTI, PI_2, canvas, confetti, context, drawCircle, i, range, resizeWindow, xpos;
 
-  NUM_CONFETTI = 350;
+  NUM_CONFETTI = 150;
 
   COLORS = [[85, 71, 106], [174, 61, 99], [219, 56, 83], [244, 92, 68], [248, 182, 70]];
 
