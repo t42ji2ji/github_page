@@ -26,7 +26,7 @@
     <div id="app">
       <transition name="fade" mode="">
           <div class="postcard" v-if="happy">
-              <img src="assets/123.png" alt="">
+              <img :src="image_url" alt="">
             </div>
       </transition>  
         <div class="card" v-if="!happy">
@@ -119,7 +119,7 @@ html, body {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
-  background-image: url("assets/02.png");
+  background-image: url("assets/puppy.png");
 }
 
 canvas {
@@ -149,11 +149,13 @@ var vue = new Vue({
     return {
       title: "請填入你的名字",
       placeholder: "請填入你的名字",
+      target: "",
       name: "",
       zdog: null,
       instance: null,
       start_animation: false,
       happy: false,
+      image_url: "assets/01.png",
       color: {
         purple: "#87469D",
         orange: ""
@@ -162,6 +164,8 @@ var vue = new Vue({
   },
   mounted (){
     // this.initZdog();
+    console.log(window.location.hash);
+    this.target = window.location.hash.split("#")[1];
   },
   computed: {
     startbutton: function() {
@@ -186,12 +190,24 @@ var vue = new Vue({
         .type(this.name)
         .pause(700)
         .delete()
-      var texts = ["是個好聽的名字呢", "19歲是不要過生日啦", "可是我也很閒","想寫個程式練習一下","你就當犧牲品吧", "希望你19歲生日", "可以平安順利",]
+      var texts = []
+      if(this.target == "gn"){
+        console.log(this.target);
+        console.log("gnn");
+        texts = ["是個好聽的名字呢", "19歲是不要過生日啦", "可是我也很閒","想寫個程式練習一下","你就當犧牲品吧", "希望你19歲生日", "可以平安順利",]
+        this.image_url = "assets/02.png"
+      } else {
+        console.log(this.target);
+        console.log("nognn");
+        texts = ["妹妹很久不見了", "說要寄一張明信片給你", "可是我很忙一直拖", "真的不好意思", "希望你不要生氣", "以後要來當哥哥的秘書", "要好好照顧自己", "常常打扮可愛可愛的", "嘿嘿嘿"]
+        this.image_url = "assets/01.png"
+      }
+
       var vm = this
       texts.forEach(function(item, index, array){
         vm.quick_type(item) // 物件, 索引, 全部陣列
       });
-      this.instance.type("送上祝賀的卡片", 900)
+      this.instance.type("卡片送給你啦", 1200)
       this.instance.pause(900)
     },
     quick_type: function(text, pausetime) {
